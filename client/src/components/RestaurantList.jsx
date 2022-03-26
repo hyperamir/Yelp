@@ -9,8 +9,13 @@ const RestaurantList = (props) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await RestaurantsFinder.get('/');
-      setRestaurants(response.data.data.restaurants)
+      try {
+        const response = await RestaurantsFinder.get('/');
+        setRestaurants(response.data.data.restaurants)
+
+      } catch (err) {
+        console.log(err);
+      }
     }
 
     fetchData();

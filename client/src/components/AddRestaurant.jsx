@@ -1,18 +1,43 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useContext } from "react";
+import RestaurantsFinder from "../api/RestaurantsFinder";
+import { RestaurantsContext } from "../context/RestaurantsContext";
 
-const AddRestaurant = () => {
+const AddRestaurant = (props) => {
+  const { addRestaurant } = useContext(RestaurantsContext);
+  const [name, setName] = useState('');
+  const [location, setLocation] = useState('');
+  const [priceRange, setPriceRange] = useState('Price Range');
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    try {
+      const response = await RestaurantsFinder.post('/', {
+        name,
+        location,
+        price_range: priceRange
+      })
+      addRestaurant(response.data.data.restaurant);
+
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+
   return (
     <div className="mb-4">
       <form action="">
         <div className="form-row">
           <div className="col">
-            <input className="form-control" type='text' placeholder="name"/>
+            <input value={name} onChange={e => setName(e.target.value)} className="form-control" type='text' placeholder="name" />
           </div>
           <div className="col">
-            <input className="form-control" type='text' placeholder="location" />
+            <input value={location} onChange={e => setLocation(e.target.value)} className="form-control" type='text' placeholder="location" />
           </div>
           <div className="col">
-            <select className="custom-select my-1 mr-sm-2">
+            <select value={priceRange} onChange={e => setPriceRange(e.target.value)} className="custom-select my-1 mr-sm-2">
               <option disabled>Price Range</option>
               <option value='1'>$</option>
               <option value='2'>$$</option>
@@ -21,7 +46,7 @@ const AddRestaurant = () => {
               <option value='5'>$$$$$</option>
             </select>
           </div>
-          <button className="btn btn-primary">Add</button>
+          <button type="submit" onClick={handleSubmit} className="btn btn-primary">Add</button>
         </div>
       </form>
     </div>
