@@ -37,8 +37,8 @@ const RestaurantList = (props) => {
     }
   }
 
-  const handleRestaurantDetail = (id) => {
-    navigate(`restaurants/${id}`);
+  const handleRestaurantSelect = (id) => {
+    navigate(`/restaurants/${id}`);
   }
 
   return (
@@ -57,7 +57,7 @@ const RestaurantList = (props) => {
         <tbody>
           {restaurants && restaurants.map(restaurant => {
             return (
-              <tr onClick={() => handleRestaurantDetail(restaurant.id)} key={restaurant.id}>
+              <tr onClick={() => handleRestaurantSelect(restaurant.id)} key={restaurant.id}>
                 <td>{restaurant.name}</td>
                 <td>{restaurant.location}</td>
                 <td>{'$'.repeat(restaurant.price_range)}</td>
