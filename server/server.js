@@ -29,7 +29,7 @@ app.get('/api/v1/restaurants', async (req, res) => {
 app.get('/api/v1/restaurants/:id', async (req, res) => {
   const restaurantId = req.params.id;
   try {
-    
+
     const restaurant = await db.query("select * from restaurants where id=$1", [restaurantId]);
     const reviews = await db.query("select * from reviews where restaurant_id=$1", [restaurantId]);
 
@@ -91,7 +91,7 @@ app.put('/api/v1/restaurants/:id', async (req, res) => {
 
 //remove a restaurant from db
 app.delete('/api/v1/restaurants/:id', async (req, res) => {
-  console.log('XXXX:', req.params.id)
+
   try {
     const deleteRestaurant = await db.query(
       "delete from restaurants where id=$1",
@@ -99,6 +99,26 @@ app.delete('/api/v1/restaurants/:id', async (req, res) => {
 
     res.status('200').json({
       status: 'success',
+    })
+
+  } catch (err) {
+    console.log(err);
+  }
+})
+
+//add a review into db
+app.post('/api/v1/restaurants/:id/review', async (req, res) => {
+
+  try {
+    const addReview = await db.query("INSERT INTO reviews (restaurant_id, name, review, rating) values ($1,$2,$3,$4) returning *",
+      [req.params.id, req.body.name, req.body.review, req.body.rating]
+    )
+    console.log('XXXXYYY',addReview)
+    res.status(201).json({
+      status: 'success',
+      data:{
+        review: addReview.rows[0]
+      }
     })
 
   } catch (err) {
