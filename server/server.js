@@ -7,6 +7,7 @@ app.use(cors());
 app.use(express.json());
 const port = process.env.PORT;
 
+//get all restaurants data
 app.get('/api/v1/restaurants', async (req, res) => {
 
   try {
@@ -24,14 +25,18 @@ app.get('/api/v1/restaurants', async (req, res) => {
   }
 });
 
+//get a restaurant data and review
 app.get('/api/v1/restaurants/:id', async (req, res) => {
   const restaurantId = req.params.id;
   try {
     
     const restaurant = await db.query("select * from restaurants where id=$1", [restaurantId]);
+    const reviews = await db.query("select * from reviews where restaurant_id=$1", [restaurantId]);
+
     res.json({
       status: 'success',
-      restaurant: restaurant.rows
+      restaurant: restaurant.rows,
+      reviews: reviews.rows
     })
 
   } catch (err) {
@@ -39,6 +44,7 @@ app.get('/api/v1/restaurants/:id', async (req, res) => {
   }
 })
 
+//create a restaurant in db
 app.post('/api/v1/restaurants', async (req, res) => {
 
   try {
@@ -61,6 +67,7 @@ app.post('/api/v1/restaurants', async (req, res) => {
 
 })
 
+//update a restaurant in db
 app.put('/api/v1/restaurants/:id', async (req, res) => {
 
   try {
@@ -82,6 +89,7 @@ app.put('/api/v1/restaurants/:id', async (req, res) => {
 
 })
 
+//remove a restaurant from db
 app.delete('/api/v1/restaurants/:id', async (req, res) => {
   console.log('XXXX:', req.params.id)
   try {
