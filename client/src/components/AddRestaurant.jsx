@@ -4,7 +4,7 @@ import RestaurantsFinder from "../api/RestaurantsFinder";
 import { RestaurantsContext } from "../context/RestaurantsContext";
 
 const AddRestaurant = (props) => {
-  const { addRestaurant } = useContext(RestaurantsContext);
+  const { addRestaurants } = useContext(RestaurantsContext);
   const [name, setName] = useState('');
   const [location, setLocation] = useState('');
   const [priceRange, setPriceRange] = useState('Price Range');
@@ -18,7 +18,7 @@ const AddRestaurant = (props) => {
         location,
         price_range: priceRange
       })
-      addRestaurant(response.data.data.restaurant);
+      addRestaurants(response.data.data.restaurant);
 
     } catch (err) {
       console.log(err);

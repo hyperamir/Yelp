@@ -27,6 +27,7 @@ app.get('/api/v1/restaurants', async (req, res) => {
 app.get('/api/v1/restaurants/:id', async (req, res) => {
   const restaurantId = req.params.id;
   try {
+    
     const restaurant = await db.query("select * from restaurants where id=$1", [restaurantId]);
     res.json({
       status: 'success',
@@ -82,6 +83,7 @@ app.put('/api/v1/restaurants/:id', async (req, res) => {
 })
 
 app.delete('/api/v1/restaurants/:id', async (req, res) => {
+  console.log('XXXX:', req.params.id)
   try {
     const deleteRestaurant = await db.query(
       "delete from restaurants where id=$1",
