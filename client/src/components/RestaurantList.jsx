@@ -3,6 +3,7 @@ import { useContext } from "react";
 import RestaurantsFinder from "../api/RestaurantsFinder";
 import { RestaurantsContext } from "../context/RestaurantsContext";
 import { useNavigate } from 'react-router-dom';
+import StarRating from "./StarRating";
 
 const RestaurantList = (props) => {
   const { restaurants, setRestaurants } = useContext(RestaurantsContext)
@@ -12,6 +13,7 @@ const RestaurantList = (props) => {
     const fetchData = async () => {
       try {
         const response = await RestaurantsFinder.get('/');
+        console.log(response.data.data)
         setRestaurants(response.data.data.restaurants)
 
       } catch (err) {
@@ -41,6 +43,18 @@ const RestaurantList = (props) => {
     navigate(`/restaurants/${id}`);
   }
 
+  const renderRating = restaurant => {
+    return (
+      !restaurant.count ? 
+      <span className="text-warning">0 reviews</span>
+      :
+      <>
+       <StarRating rating={restaurant.average_rating}/>
+       <span className="text-warning ml-1">({restaurant.count})</span>
+      </>
+    );
+  }
+
   return (
     <div className="list-group">
       <table className="table table-hover table-dark">
@@ -61,7 +75,7 @@ const RestaurantList = (props) => {
                 <td>{restaurant.name}</td>
                 <td>{restaurant.location}</td>
                 <td>{'$'.repeat(restaurant.price_range)}</td>
-                <td>Rating</td>
+                <td>{renderRating(restaurant)}</td>
                 <td><button className="btn btn-warning" onClick={(e) => handleUpdate(e, restaurant.id)}>Update</button></td>
                 <td><button className="btn btn-danger" type="submit" onClick={(e) => handleDelete(e, restaurant.id)} >Delete</button></td>
               </tr>
